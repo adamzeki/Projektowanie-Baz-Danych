@@ -3,7 +3,7 @@ import json
 import os
 
 
-def import_jsons_to_mongo(data_path, validation_path, db_name, mongo_uri="mongodb://admin:admin@localhost:27017/?authSource=admin"):
+def import_jsons_to_mongo(data_path, validation_path, db_name, mongo_uri="mongodb://localhost:27017/"):
     client = pymongo.MongoClient(mongo_uri)
     db = client[db_name]
 
