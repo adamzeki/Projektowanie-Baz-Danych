@@ -1,0 +1,14 @@
+[
+    {
+      "id": 301,
+      "name": "Main Office",
+      "address": "Downtown HQ",
+      "terminals": [{ "id": 1 }]
+    },
+    {
+      "id": 302,
+      "name": "Remote Hub",
+      "address": "Suburban Center",
+      "terminals": [{ "id": 2}]
+    }
+]

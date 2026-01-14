@@ -1,0 +1,11 @@
+[
+    {
+      "id": 1001,
+      "time_from": "2024-01-15T08:00:00Z",
+      "time_to": "2024-01-15T16:30:00Z",
+      "fk_employee": 1,
+      "fk_start_terminal": 1,
+      "fk_end_terminal": 1,
+      "fk_project": 201
+    }
+]

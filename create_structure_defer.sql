@@ -104,6 +104,19 @@ CREATE TABLE terminal (
   fk_location INTEGER NOT NULL
 );
 
+CREATE_TABLE vacancy (
+    id    SERIAL    PRIMARY KEY,
+    FK_project    INT    NOT NULL    REFERENCES project    ON DELETE CASCADE,
+    FK_employee    INT    REFERENCES employee    ON DELETE RESTRICT
+);
+
+CREATE_TABLE vacancy_skill (
+    id    SERIAL    PRIMARY KEY,
+    FK_vacancy    INT    NOT NULL    REFERENCES vacancy    ON DELETE CASCADE,
+    FK_skill_type    INT    NOT NULL    REFERENCES skill_type    ON DELETE RESTRICT,
+    level    INT    NOT NULL    CHECK (level >= 0 AND level <=5)
+);
+
 ALTER TABLE employee
   ADD CONSTRAINT fk_department
   FOREIGN KEY (fk_department)
