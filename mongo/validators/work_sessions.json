@@ -3,7 +3,7 @@
     "$jsonSchema": {
       "bsonType": "object",
       "required": [
-        "id",
+        "_id",
         "time_from",
         "time_to",
         "fk_employee",
@@ -12,7 +12,7 @@
         "fk_project"
       ],
       "properties": {
-        "id": {
+        "_id": {
           "bsonType": "int"
         },
         "time_from": {
