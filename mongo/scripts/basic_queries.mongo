@@ -1,0 +1,46 @@
+
+db.employees.find({name: "John", surname: "Doe"}, {_id: 1, "project_assignments.id": 1})
+
+db.projects.find({"vacancies.fk_employee": 1}, {name: 1,  vacancy: 1})
+
+db.employees.find({"competences.skill_type": "Python Programming"}, {_id: 1, name: 1, surname: 1})
+
+db.employees
+    .aggregate([
+        {
+            $match: {
+                name: "John",
+        surname: "Doe"
+            }
+        },
+        {
+                $lookup: {
+                    from: "work_sessions",
+                    localField: "id",
+                    foreignField: "fk_employee",
+                    as: "work_session"
+                }
+        },
+        {
+            $project: {_id: 1,  name: 1, surname: 1,work_session: 1}
+        }
+    ])
+
+
+db.employees.aggregate([
+        {
+            $project: {
+                competences: 1
+        }
+        },
+        {
+            $unwind: "$competences"
+        },
+        {
+            $group: {
+                    _id: "$competences.skill_type",
+                    count: {$sum: 1}
+                }
+
+        }
+    ])
