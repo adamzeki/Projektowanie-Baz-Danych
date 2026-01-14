@@ -3,19 +3,33 @@ import json
 import os
 
 
-def import_jsons_to_mongo(directory_path, db_name, mongo_uri="mongodb://localhost:27017/"):
+def import_jsons_to_mongo(data_path, validation_path, db_name, mongo_uri="mongodb://admin:admin@localhost:27017/?authSource=admin"):
     client = pymongo.MongoClient(mongo_uri)
     db = client[db_name]
 
     print(f"Connected to database: {db_name}")
 
-    if not os.path.exists(directory_path):
-        print(f"Error: Directory '{directory_path}' not found.")
+    if not os.path.exists(data_path):
+        print(f"Error: Directory '{data_path}' not found.")
         return
 
-    for filename in os.listdir(directory_path):
+    if not os.path.exists(validation_path):
+        print(f"Error: Directory '{validation_path}' not found.")
+        return
+
+    for filename in os.listdir(validation_path):
         if filename.endswith(".json"):
-            file_path = os.path.join(directory_path, filename)
+            collection_name = os.path.splitext(filename)[0]
+            
+            file_path = os.path.join(validation_path, filename)
+
+            with open(file_path, "r") as f:
+                content = json.load(f)
+                db.create_collection(collection_name, validator=content["validator"])
+
+    for filename in os.listdir(data_path):
+        if filename.endswith(".json"):
+            file_path = os.path.join(data_path, filename)
 
             collection_name = os.path.splitext(filename)[0]
             collection = db[collection_name]
@@ -41,5 +55,6 @@ def import_jsons_to_mongo(directory_path, db_name, mongo_uri="mongodb://localhos
 if __name__ == "__main__":
     PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
     JSON_DIR = os.path.join(PROJECT_DIR, "jsons")
+    VALIDATORS_DIR = os.path.join(PROJECT_DIR, "validators")
 
-    import_jsons_to_mongo(JSON_DIR, "ProjectDb")
+    import_jsons_to_mongo(JSON_DIR, VALIDATORS_DIR, "ProjectDb")

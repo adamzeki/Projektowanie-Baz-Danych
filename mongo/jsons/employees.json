@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "_id": 1,
     "login": "jdoe",
     "user_password": "hashed_password_1",
     "permission_type": 1,
@@ -10,7 +10,7 @@
     "fk_department": 101,
     "absences": [
       {
-        "id": 1,
+        "_id": 1,
         "date_from": "2024-01-10",
         "date_to": "2024-01-15",
         "absence_type": "Vacation",
@@ -19,14 +19,14 @@
     ],
     "competences": [
       {
-        "id": 1,
+        "_id": 1,
         "skill_type": "Python Programming",
         "level": 5
       }
     ],
     "project_assignments": [
       {
-        "id": 501,
+        "_id": 501,
         "fk_project": 201,
         "project_role": "Lead Developer",
         "date_start": "2023-09-01",
@@ -36,13 +36,13 @@
           { "weekday": 3, "time_from": "09:00", "time_to": "17:00" }
         ],
         "monthly_scores": [
-          { "id": 10, "score": 9, "date_of": "2023-12-01" }
+          { "_id": 10, "score": 9, "date_of": "2023-12-01" }
         ]
       }
     ]
   },
   {
-    "id": 2,
+    "_id": 2,
     "login": "asmith",
     "user_password": "hashed_password_2",
     "permission_type": 2,
@@ -53,7 +53,7 @@
     "absences": [],
     "competences": [
       {
-        "id": 2,
+        "_id": 2,
         "skill_type": "Project Management",
         "level": 5
       }

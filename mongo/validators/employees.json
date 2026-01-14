@@ -1,0 +1,189 @@
+{
+  "validator": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": [
+        "_id",
+        "login",
+        "user_password",
+        "permission_type",
+        "name",
+        "surname",
+        "telephone",
+        "fk_department",
+        "absences",
+        "competences",
+        "project_assignments"
+      ],
+      "properties": {
+        "_id": {
+          "bsonType": "int"
+        },
+        "login": {
+          "bsonType": "string"
+        },
+        "user_password": {
+          "bsonType": "string"
+        },
+        "permission_type": {
+          "bsonType": "int"
+        },
+        "name": {
+          "bsonType": "string"
+        },
+        "surname": {
+          "bsonType": "string"
+        },
+        "telephone": {
+          "bsonType": [
+            "string",
+            "null"
+          ]
+        },
+        "fk_department": {
+          "bsonType": [
+            "int",
+            "null"
+          ]
+        },
+        "absences": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "object",
+            "required": [
+              "_id",
+              "date_from",
+              "date_to",
+              "absence_type",
+              "paid"
+            ],
+            "properties": {
+              "_id": {
+                "bsonType": "int"
+              },
+              "date_from": {
+                "bsonType": "string"
+              },
+              "date_to": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              },
+              "absence_type": {
+                "bsonType": "string"
+              },
+              "paid": {
+                "bsonType": "bool"
+              }
+            }
+          }
+        },
+        "competences": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "object",
+            "required": [
+              "_id",
+              "skill_type",
+              "level"
+            ],
+            "properties": {
+              "_id": {
+                "bsonType": "int"
+              },
+              "skill_type": {
+                "bsonType": "string"
+              },
+              "level": {
+                "bsonType": "int"
+              }
+            }
+          }
+        },
+        "project_assignments": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "object",
+            "required": [
+              "_id",
+              "fk_project",
+              "project_role",
+              "date_start",
+              "date_end",
+              "work_schedules",
+              "monthly_scores"
+            ],
+            "properties": {
+              "_id": {
+                "bsonType": "int"
+              },
+              "fk_project": {
+                "bsonType": "int"
+              },
+              "project_role": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              },
+              "date_start": {
+                "bsonType": "string"
+              },
+              "date_end": {
+                "bsonType": [
+                  "string",
+                  "null"
+                ]
+              },
+              "work_schedules": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "object",
+                  "required": [
+                    "weekday",
+                    "time_from",
+                    "time_to"
+                  ],
+                  "properties": {
+                    "weekday": {
+                      "bsonType": "int"
+                    },
+                    "time_from": {
+                      "bsonType": "string"
+                    },
+                    "time_to": {
+                      "bsonType": "string"
+                    }
+                  }
+                }
+              },
+              "monthly_scores": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "object",
+                  "required": [
+                    "_id",
+                    "score",
+                    "date_of"
+                  ],
+                  "properties": {
+                    "_id": {
+                      "bsonType": "int"
+                    },
+                    "score": {
+                      "bsonType": "int"
+                    },
+                    "date_of": {
+                      "bsonType": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

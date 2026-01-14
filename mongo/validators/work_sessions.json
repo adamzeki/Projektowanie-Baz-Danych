@@ -1,0 +1,45 @@
+{
+  "validator": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": [
+        "id",
+        "time_from",
+        "time_to",
+        "fk_employee",
+        "fk_start_terminal",
+        "fk_end_terminal",
+        "fk_project"
+      ],
+      "properties": {
+        "id": {
+          "bsonType": "int"
+        },
+        "time_from": {
+          "bsonType": "string"
+        },
+        "time_to": {
+          "bsonType": [
+            "string",
+            "null"
+          ]
+        },
+        "fk_employee": {
+          "bsonType": "int"
+        },
+        "fk_start_terminal": {
+          "bsonType": "int"
+        },
+        "fk_end_terminal": {
+          "bsonType": [
+            "int",
+            "null"
+          ]
+        },
+        "fk_project": {
+          "bsonType": "int"
+        }
+      }
+    }
+  }
+}

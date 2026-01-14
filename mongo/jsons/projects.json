@@ -1,13 +1,13 @@
 [
   {
-    "id": 201,
+    "_id": 201,
     "name": "Cloud Migration 2024",
     "fk_overseer_employee": 1,
     "location":
-        { "id": 301, "name": "Main Office", "address": "Downtown HQ" },
+        { "_id": 301, "name": "Main Office", "address": "Downtown HQ" },
     "vacancies": [
       {
-        "id": 10,
+        "_id": 10,
         "fk_employee": 1,
         "vacancy_skills": [
           { "skill_type": "Python Programming", "level": 4 }
@@ -16,11 +16,11 @@
     ]
   },
   {
-    "id": 202,
+    "_id": 202,
     "name": "Internal Audit System",
     "fk_overseer_employee": 2,
     "location":
-        { "id": 302, "name": "Remote Hub", "address": "Suburban Center" },
+        { "_id": 302, "name": "Remote Hub", "address": "Suburban Center" },
     "vacancies": []
   }
 ]

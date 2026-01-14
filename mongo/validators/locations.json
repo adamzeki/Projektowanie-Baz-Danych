@@ -1,0 +1,41 @@
+{
+  "validator": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": [
+        "_id",
+        "name",
+        "address",
+        "terminals"
+      ],
+      "properties": {
+        "_id": {
+          "bsonType": "int"
+        },
+        "name": {
+          "bsonType": [
+            "string",
+            "null"
+          ]
+        },
+        "address": {
+          "bsonType": "string"
+        },
+        "terminals": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "object",
+            "required": [
+              "_id"
+            ],
+            "properties": {
+              "_id": {
+                "bsonType": "int"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

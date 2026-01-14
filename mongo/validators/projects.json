@@ -1,0 +1,93 @@
+{
+  "validator": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": [
+        "_id",
+        "name",
+        "fk_overseer_employee",
+        "location",
+        "vacancies"
+      ],
+      "properties": {
+        "_id": {
+          "bsonType": "int"
+        },
+        "name": {
+          "bsonType": "string"
+        },
+        "fk_overseer_employee": {
+          "bsonType": [
+            "int",
+            "null"
+          ]
+        },
+        "location": {
+          "bsonType": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "_id",
+            "name",
+            "address"
+          ],
+          "properties": {
+            "_id": {
+              "bsonType": "int"
+            },
+            "name": {
+              "bsonType": [
+                "string",
+                "null"
+              ]
+            },
+            "address": {
+              "bsonType": "string"
+            }
+          }
+        },
+        "vacancies": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "object",
+            "required": [
+              "_id",
+              "fk_employee",
+              "vacancy_skills"
+            ],
+            "properties": {
+              "_id": {
+                "bsonType": "int"
+              },
+              "fk_employee": {
+                "bsonType": [
+                  "int",
+                  "null"
+                ]
+              },
+              "vacancy_skills": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "object",
+                  "required": [
+                    "skill_type",
+                    "level"
+                  ],
+                  "properties": {
+                    "skill_type": {
+                      "bsonType": "string"
+                    },
+                    "level": {
+                      "bsonType": "int"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

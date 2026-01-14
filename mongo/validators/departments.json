@@ -1,0 +1,33 @@
+{
+  "validator": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": [
+        "_id",
+        "name",
+        "address",
+        "fk_head_employee"
+      ],
+      "properties": {
+        "_id": {
+          "bsonType": "int"
+        },
+        "name": {
+          "bsonType": "string"
+        },
+        "address": {
+          "bsonType": [
+            "string",
+            "null"
+          ]
+        },
+        "fk_head_employee": {
+          "bsonType": [
+            "int",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
