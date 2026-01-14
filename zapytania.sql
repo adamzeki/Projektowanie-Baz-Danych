@@ -1,4 +1,5 @@
--- Liczba różnych lokacji, w których pracował pracownik
+-- Liczba różnych lokacji, w których pracował pracownik (wersja wolna)
+-- 12 -> 10s
 SELECT employee.id, employee.login, employee.name, employee.surname, COUNT(DISTINCT location_table.id) AS location_count
 FROM employee
 LEFT JOIN work_session ON employee.id = work_session.fk_employee
@@ -8,7 +9,38 @@ LEFT JOIN location_table ON start_terminal.fk_location = location_table.id OR en
 GROUP BY employee.id
 ORDER BY location_count DESC;
 
+-- Liczba różnych lokacji, w których pracował pracownik (wersja zoptymalizowana 12s -> 7s), pozbywamy się ORa
+-- 7s -> 7s
+WITH employee_locations AS (
+    SELECT 
+        ws.fk_employee, 
+        t.fk_location AS location_id
+    FROM work_session ws
+    JOIN terminal t ON ws.fk_start_terminal = t.id
+    WHERE t.fk_location IS NOT NULL
+
+    UNION
+
+    SELECT 
+        ws.fk_employee, 
+        t.fk_location AS location_id
+    FROM work_session ws
+    JOIN terminal t ON ws.fk_end_terminal = t.id
+    WHERE t.fk_location IS NOT NULL
+)
+SELECT
+    e.id,
+    e.login,
+    e.name,
+    e.surname,
+    COUNT(el.location_id) AS location_count
+FROM employee e
+LEFT JOIN employee_locations el ON e.id = el.fk_employee
+GROUP BY e.id
+ORDER BY location_count DESC;
+
 -- Stosunek aktywnych do zakończonych assignmentów w projektach
+-- <0.1s
 SELECT 
     active_count,
     finished_count,
@@ -27,6 +59,7 @@ FROM (
 ORDER BY active_finished_ratio DESC;
 
 -- Sesje pracy, które odbyły się innego dnia, niż zaplanowane work schedule
+-- 1.9s -> 1.9s
 SELECT work_session.*
 FROM work_session
 INNER JOIN project ON work_session.fk_project = project.id
@@ -43,6 +76,7 @@ LEFT JOIN
 WHERE work_schedule.id IS NULL;
 
 -- Zróżnicowanie kompetencji w różnych departamentach – ile średnio kompetencji przypada na jednego pracownika
+-- 0.1s
 SELECT department.id, department.name, AVG(competence_count) AS avg_competence_types_per_employee
 FROM (
     SELECT COUNT(competence.id) AS competence_count, fk_department
@@ -55,6 +89,7 @@ GROUP BY department.id
 ORDER BY avg_competence_types_per_employee DESC;
 
 -- Pracownicy, którzy najwyższy poziom danej kompetencji w projekcie
+-- 12s -> 9s
 SELECT
     employee.id,
     employee.login,
@@ -80,6 +115,7 @@ GROUP BY employee.id, project.id, project.name, skill_type.id, skill_type.name
 HAVING COUNT(others_competence.id) = 0;
 
 -- Porównanie, ile work session odbywa się w głównej lokacji projektu, a ile poza nią
+-- 1s -> 0.9s
 SELECT
     project.id,
     project.name,
@@ -91,6 +127,7 @@ INNER JOIN terminal ON work_session.fk_start_terminal = terminal.id
 GROUP BY project.id, project.name;
 
 -- Sredni score pracownika we wszystkich projektach --
+-- <0.1s
 SELECT
 	e.id,
 	e.name,
@@ -117,6 +154,7 @@ ORDER BY
 	avg_score DESC;
 
 -- Ilosc dni urlopu ktore wykorzystal pracownik w danym roku --
+-- <0.1s
 SELECT
 	e.id,
 	e.name,
@@ -137,6 +175,7 @@ ORDER BY
 	vacation_days ASC;
 
 -- Wszystkie role pelnione przez pracownika --
+-- <0.1s
 SELECT
 	p.id,
 	p.name,
@@ -157,6 +196,7 @@ ORDER BY
 	p.id ASC, p_r.name ASC;
 
 -- Pracownicy ktorzy w danym okresie byli w danej lokacji --
+-- 0.13s -> 0.4s :)
 SELECT
 	e.id,
 	e.name,
@@ -177,6 +217,7 @@ GROUP BY
 	e.id, e.name, e.surname;
 
 -- Ilosc projektow nadzorowanych przez pracownikow --
+-- <0.1s
 SELECT
 	e.id,
 	e.name,
@@ -194,6 +235,7 @@ ORDER BY
 	oversee_count ASC;
 
 -- Pracownicy bez zadnych przydzialow projektowych --
+-- <0.1s
 SELECT
 	e.id,
 	e.name,
@@ -208,6 +250,7 @@ GROUP BY
 	e.id, e.name, e.surname;
 
 -- Laczna ilosc godzin ktora pracownik powinien wyrobic tygodniowo --
+-- <0.1s
 SELECT
 	e.id,
 	e.name,
@@ -231,6 +274,7 @@ ORDER BY
 	weekly_shift DESC; 
 
 -- lista pracowników pracujących nad wybranym projektem
+-- <0.1s
 PREPARE get_project_employees(integer) AS
 SELECT employee.id, employee.name, employee.surname 
 FROM project_assignment JOIN employee ON project_assignment.fk_employee = employee.id 
@@ -239,21 +283,25 @@ WHERE date_end IS NULL;
 EXECUTE get_project_employees(1);
 
 -- 10 pracowników, którzy przepracowali najwięcej godzin w październiku 2025
+-- 0.114s -> 0.240s :)
 SELECT employee.id, name, surname, SUM(time_to - time_from) AS time_worked 
 FROM employee JOIN work_session ON employee.id = work_session.fk_employee 
 WHERE time_from > '2025-10-01' AND time_to < '2025-11-01' GROUP BY employee.id ORDER BY time_worked DESC LIMIT 10;
 
 -- Liczba pracowników dla każdego departamentu
+-- <0.1s
 SELECT department.id, department.name, COUNT(employee.id) AS liczba_pracownikow 
 FROM department RIGHT JOIN employee ON employee.fk_department = department.id 
 GROUP BY department.id ORDER BY liczba_pracownikow DESC;
 
 -- Lista skilltype wg. popularności
+-- <0.1s
 SELECT name, COUNT(competence.id) AS liczba_pracownikow 
 FROM skill_type JOIN competence ON skill_type.id = competence.fk_skill_type 
 GROUP BY name ORDER BY liczba_pracownikow DESC;
 
 -- Lista pracowników o poziomie danej umiejętności wyższym/równym od podanego
+-- <0.1s
 CREATE OR REPLACE FUNCTION workers_with_skill(skill text, level int)  
 RETURNS TABLE(id int, name text, surname text, skill_name text, skill_level int) 
 AS $$
@@ -267,9 +315,10 @@ LEAKPROOF;
 SELECT * FROM workers_with_skill('Python', 3);
 
 -- Lista ile razy każda lokacja była odwiedzona w październiku
+-- 0.128s -> 0.114s
 SELECT location_table.id, location_table.name, COUNT(work_session.id) AS odwiedzenia  
 FROM location_table RIGHT JOIN 
-	(terminal JOIN work_session ON terminal.id = work_session.fk_start_terminal) ON location_table.id = terminal.fk_location_table 
+	(terminal JOIN work_session ON terminal.id = work_session.fk_start_terminal) ON location_table.id = terminal.fk_location
 WHERE time_to < '2025-11-01' AND time_from > '2025-10-01' GROUP BY location_table.id ORDER BY odwiedzenia DESC;
 
 
