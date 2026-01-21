@@ -8,7 +8,7 @@ from faker import Faker
 import datetime
 import random
 
-MONGO_URI = "mongodb://admin:admin@localhost:27017/"
+#MONGO_URI = "mongodb://admin:admin@localhost:27017/"
 DB_NAME = "company_db"
 fake = Faker('en_US')
 
@@ -197,8 +197,7 @@ table_counts = {
     'competence': 10000,
 }
 
-class IdGenerator:
-    """Ensures unique IDs by maintaining global counters"""
+class IdGenerator: # ensures unique IDs
     def __init__(self):
         self.counters = {
             'terminal': 1,
@@ -247,18 +246,16 @@ def get_db():
     return client[DB_NAME]
 
 def create_collection_safe(db, name, validator):
-    """Creates collection with validator, dropping it if it exists."""
     if name in db.list_collection_names():
         db.drop_collection(name)
     
     try:
         db.create_collection(name, validator=validator)
     except CollectionInvalid:
-        pass # Should not happen after drop, but safe to pass
+        pass # should not happen after drop, but safe to pass
 
 def generate_work_sessions_mongo(id_gen, employee_id, project_id, schedule_weekday, 
                                time_from, time_to, start_date, end_date, terminal_pool):
-    """Generates a list of session dictionaries."""
     sessions = []
     current_date = start_date
     
@@ -367,10 +364,10 @@ def populate_mongo():
     db = get_db()
     id_gen = IdGenerator()
     
-    print("Cleaning existing database...")
+    print("Cleaning existing database")
     db.client.drop_database(DB_NAME)
     
-    print("Generating Locations and Terminals...")
+    print("Generating Locations and Terminals")
     create_collection_safe(db, 'locations', VALIDATOR_LOCATION)
     
     locations_data = []
@@ -395,7 +392,7 @@ def populate_mongo():
         
     db.locations.insert_many(locations_data)
 
-    print("Generating Employee Shells...")
+    print("Generating Employee shells")
     create_collection_safe(db, 'employees', VALIDATOR_EMPLOYEE)
     
     employees_data = {} 
@@ -416,7 +413,7 @@ def populate_mongo():
             'project_assignments': []
         }
 
-    print("Generating Projects, Assignments, and Sessions...")
+    print("Generating Projects, Assignments, and Sessions")
     create_collection_safe(db, 'projects', VALIDATOR_PROJECT)
     
     projects_data = []
@@ -488,10 +485,10 @@ def populate_mongo():
             }
             emp_doc['project_assignments'].append(assignment_doc)
 
-    print("Inserting Projects...")
+    print("Inserting Projects")
     db.projects.insert_many(projects_data)
 
-    print("Finalizing Employees...")
+    print("Finalizing Employees")
     final_employee_list = []
     
     for emp_id, emp_doc in employees_data.items():
@@ -507,7 +504,7 @@ def populate_mongo():
         
     db.employees.insert_many(final_employee_list)
 
-    print("Generating Departments...")
+    print("Generating Departments")
     create_collection_safe(db, 'departments', VALIDATOR_DEPARTMENT)
     dept_names = ['R&D', 'Cybersec', 'Assistance in Developing Systems', 'Frontend', 'Machine Learning', 'Database Management']
     dept_data = []
@@ -520,7 +517,7 @@ def populate_mongo():
         })
     db.departments.insert_many(dept_data)
 
-    print("Inserting Work Sessions (Sharded per employee)...")
+    print("Inserting Work Sessions")
     
     created_session_colls = set()
     
@@ -534,7 +531,7 @@ def populate_mongo():
             
             db[coll_name].insert_many(sessions)
             
-    print(f"Database population complete! Total sessions generated: {id_gen.counters['session']}")
+    print(f"Database population complete. Total sessions generated: {id_gen.counters['session']}")
 
 if __name__ == '__main__':
     populate_mongo()
