@@ -107,5 +107,23 @@ def employees_in_given_location_in_period():
     return result
 
 
+# Zróżnicowanie kompetencji w różnych departamentach – ile średnio kompetencji przypada na jednego pracownika
+def department_average_competences():
+    employees = db.get_collection("employees")
+
+    return employees.aggregate([
+        {
+            "$group": {
+                "_id": "$fk_department",
+                "avg_count": {
+                    "$avg": {
+                        "$size": "$competences"
+                    }
+                }
+            }
+        }
+    ])
+
+
 if __name__ == "__main__":
-    print("\n".join(map(str, employees_in_given_location_in_period())))
+    print("\n".join(map(str, department_average_competences())))
