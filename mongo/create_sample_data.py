@@ -8,7 +8,7 @@ from faker import Faker
 import datetime
 import random
 
-MONGO_URI = "mongodb://localhost:27017/"
+MONGO_URI = "mongodb://admin:admin@localhost:27017/"
 DB_NAME = "company_db"
 fake = Faker('en_US')
 
